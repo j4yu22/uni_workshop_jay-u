@@ -1,3 +1,6 @@
+Presentation link: https://j4yu22.github.io/uni_workshop_jay-u/
+(If link doesn't work, presentation content and dbt build screenshot are in presentation/)
+
 # University Workshop Starter
 This repository is a **starting point** for an end-to-end analytics engineering project in dbt as experienced in a dbt Labs University Workshop. This repo uses the legendary [Jaffle Shop](https://github.com/dbt-labs/jaffle-shop) project for its curated sample data, but with a much smaller scope: **only seeds** are included so you can get started easily. Your job in the workshop will be to design and build your own staging layer (guided) and then the intermediate and mart layer (independently) to ultimately answer specified analytics/business question(s).
 
