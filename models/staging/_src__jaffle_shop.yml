@@ -1,0 +1,172 @@
+sources:
+  - name: jaffle_shop
+    database: dbt-project-fall-2026-514501
+    schema: dbt_underwood_jay_raw
+    tables:
+          - name: raw_customers
+            description: ""
+            columns:
+              - name: id
+                data_type: string
+                description: ""
+              - name: name
+                data_type: string
+                description: ""
+
+          - name: raw_items
+            description: ""
+            columns:
+              - name: id
+                data_type: string
+                description: ""
+              - name: order_id
+                data_type: string
+                description: ""
+              - name: sku
+                data_type: string
+                description: ""
+
+          - name: raw_orders
+            description: ""
+            columns:
+              - name: id
+                data_type: string
+                description: ""
+              - name: customer
+                data_type: string
+                description: ""
+              - name: ordered_at
+                data_type: datetime
+                description: ""
+              - name: store_id
+                data_type: string
+                description: ""
+              - name: subtotal
+                data_type: int64
+                description: ""
+              - name: tax_paid
+                data_type: int64
+                description: ""
+              - name: order_total
+                data_type: int64
+                description: ""
+
+          - name: raw_products
+            description: ""
+            columns:
+              - name: sku
+                data_type: string
+                description: ""
+              - name: name
+                data_type: string
+                description: ""
+              - name: type
+                data_type: string
+                description: ""
+              - name: price
+                data_type: int64
+                description: ""
+              - name: description
+                data_type: string
+                description: ""
+
+          - name: raw_rentals
+            description: ""
+            columns:
+              - name: id
+                data_type: string
+                description: ""
+              - name: rider
+                data_type: string
+                description: ""
+              - name: station_id
+                data_type: string
+                description: ""
+              - name: started_at
+                data_type: string
+                description: ""
+              - name: ended_at
+                data_type: string
+                description: ""
+              - name: miles
+                data_type: float64
+                description: ""
+              - name: price_cents
+                data_type: int64
+                description: ""
+              - name: kiosk_version
+                data_type: string
+                description: ""
+
+          - name: raw_riders
+            description: ""
+            columns:
+              - name: id
+                data_type: string
+                description: ""
+              - name: full_name
+                data_type: string
+                description: ""
+              - name: signed_up_on
+                data_type: string
+                description: ""
+              - name: ssn
+                data_type: string
+                description: ""
+
+          - name: raw_stations
+            description: ""
+            columns:
+              - name: id
+                data_type: string
+                description: ""
+              - name: station_name
+                data_type: string
+                description: ""
+              - name: city
+                data_type: string
+                description: ""
+              - name: opened_at
+                data_type: string
+                description: ""
+              - name: docks
+                data_type: int64
+                description: ""
+              - name: map_color_hex
+                data_type: string
+                description: ""
+
+          - name: raw_stores
+            description: ""
+            columns:
+              - name: id
+                data_type: string
+                description: ""
+              - name: name
+                data_type: string
+                description: ""
+              - name: opened_at
+                data_type: datetime
+                description: ""
+              - name: tax_rate
+                data_type: float64
+                description: ""
+
+          - name: raw_supplies
+            description: ""
+            columns:
+              - name: id
+                data_type: string
+                description: ""
+              - name: name
+                data_type: string
+                description: ""
+              - name: cost
+                data_type: int64
+                description: ""
+              - name: perishable
+                data_type: boolean
+                description: ""
+              - name: sku
+                data_type: string
+                description: ""

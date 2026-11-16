@@ -1,0 +1,104 @@
+version: 2
+
+models:
+  - name: dim__customers
+    description: "One row per customer, with spending and visit summaries across all stores in the observed data. Repeat customers have at least three orders; this is a current classification, not their status at an earlier order."
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_name
+        description: "Customer name from the source data."
+      - name: total_visits
+        description: "Number of orders across all stores; one order counts as one visit."
+      - name: visit_group
+        description: "Current observed order-count group: 0, 1, 2, or 3+."
+      - name: is_repeat_customer
+        description: "True when the customer has at least three orders across all stores."
+      - name: first_ordered_at
+        description: "Timestamp of the customer's first observed order."
+      - name: second_ordered_at
+        description: "Timestamp of the second order; null if there are fewer than two orders."
+      - name: latest_ordered_at
+        description: "Timestamp of the customer's latest observed order."
+      - name: days_to_second_order
+        description: "Elapsed days from the first to the second order, including fractional days; null before a second order."
+      - name: avg_days_between_visits
+        description: "Average elapsed days between consecutive orders; null with fewer than two orders."
+      - name: total_spend_dollars
+        description: "Sum of order totals including tax, in dollars."
+      - name: avg_order_total_dollars
+        description: "Average order total including tax, in dollars rounded to two decimal places; null with no orders."
+
+  - name: fct__orders
+    description: "One row per order, combining spending, exact product quantities, customer history, and store details. One order counts as one visit. Customer groups use all observed orders across all stores, not the customer's status at the order date. The current sample covers September 1-16, 2016 and orders from Philadelphia only."
+    columns:
+      - name: order_id
+        description: "Unique order identifier."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer who placed the order."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim__customers')
+                field: customer_id
+      - name: customer_name
+        description: "Customer name for readable order-level analysis."
+      - name: store_id
+        description: "Store where the order was placed."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__jaffle_shop__raw_stores')
+                field: store_id
+      - name: store_name
+        description: "Store location name."
+      - name: ordered_at
+        description: "Order timestamp as supplied by the source."
+      - name: order_date
+        description: "UTC calendar date derived from the order timestamp."
+      - name: visit_number
+        description: "Customer's chronological order number across all stores, starting at one; tied timestamps use order_id."
+      - name: previous_ordered_at
+        description: "Timestamp of the customer's preceding order; null on the first visit."
+      - name: days_since_previous_order
+        description: "Elapsed days since the preceding order, including fractional days; null on the first visit."
+      - name: customer_visit_group
+        description: "Customer's current group across all observed orders: 0, 1, 2, or 3+. This is not an as-of-order or store-specific group."
+      - name: is_repeat_customer
+        description: "True when the customer has at least three orders in the full observed sample across all stores, even if this row is their first order."
+      - name: order_subtotal_dollars
+        description: "Order amount before tax, converted from cents to dollars."
+      - name: order_tax_paid_dollars
+        description: "Tax paid on the order, converted from cents to dollars."
+      - name: order_total_dollars
+        description: "Order subtotal plus tax, converted from cents to dollars."
+      - name: item_count
+        description: "Total purchased items in the order; each source item row is one unit."
+      - name: jaf_001_qty
+        description: "Units of JAF-001 in the order; zero when absent."
+      - name: jaf_002_qty
+        description: "Units of JAF-002 in the order; zero when absent."
+      - name: jaf_003_qty
+        description: "Units of JAF-003 in the order; zero when absent."
+      - name: jaf_004_qty
+        description: "Units of JAF-004 in the order; zero when absent."
+      - name: jaf_005_qty
+        description: "Units of JAF-005 in the order; zero when absent."
+      - name: bev_001_qty
+        description: "Units of BEV-001 in the order; zero when absent."
+      - name: bev_002_qty
+        description: "Units of BEV-002 in the order; zero when absent."
+      - name: bev_003_qty
+        description: "Units of BEV-003 in the order; zero when absent."
+      - name: bev_004_qty
+        description: "Units of BEV-004 in the order; zero when absent."
+      - name: bev_005_qty
+        description: "Units of BEV-005 in the order; zero when absent."

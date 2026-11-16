@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: int__order_contents
+    description: "One row per order, with total item count and quantities for each product."
+    columns:
+      - name: order_id
+        description: "Unique order identifier after summarizing the item rows."
+        data_tests:
+          - unique
+          - not_null
+      - name: item_count
+        description: "Total purchased items, including repeated units of the same product."
+
+  - name: int__customer_history
+    description: "One row per order, with the customer's visit sequence and elapsed time since their previous order."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - customer_id
+              - visit_number
+    columns:
+      - name: order_id
+        description: "Unique order identifier."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer whose orders form this visit sequence."
+        data_tests:
+          - not_null
+      - name: ordered_at
+        description: "Order timestamp; ties in the visit sequence use order_id."
+      - name: visit_number
+        description: "Chronological order number within each customer, starting at one."
+        data_tests:
+          - not_null
+      - name: previous_ordered_at
+        description: "Previous order timestamp; null on the first visit."
+      - name: days_since_previous_order
+        description: "Elapsed days since the previous order, including fractional days; null on the first visit."
