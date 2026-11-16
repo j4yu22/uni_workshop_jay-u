@@ -1,0 +1,105 @@
+version: 2
+
+models:
+  - name: stg__jaffle_shop__customers
+    description: "One row per customer from the raw customer data."
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier."
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg__jaffle_shop__raw_orders
+    description: "One row per order, with customer and store keys; amounts remain in cents."
+    columns:
+      - name: order_id
+        description: "Unique order identifier."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer who placed the order."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__jaffle_shop__customers')
+                field: customer_id
+      - name: store_id
+        description: "Store where the order was placed."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__jaffle_shop__raw_stores')
+                field: store_id
+      - name: ordered_at
+        description: "Order timestamp used to sequence customer visits."
+        data_tests:
+          - not_null
+
+  - name: stg__jaffle_shop__raw_items
+    description: "One row per purchased item; repeated products have separate item IDs."
+    columns:
+      - name: item_id
+        description: "Unique purchased-item identifier."
+        data_tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Order containing this item."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__jaffle_shop__raw_orders')
+                field: order_id
+      - name: sku
+        description: "Product purchased in this item row."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__jaffle_shop__raw_products')
+                field: sku
+
+  - name: stg__jaffle_shop__raw_products
+    description: "One row per product SKU."
+    columns:
+      - name: sku
+        description: "Unique product identifier."
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg__jaffle_shop__raw_stores
+    description: "One row per store, including stores with no orders."
+    columns:
+      - name: store_id
+        description: "Unique store identifier."
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg__jaffle_shop__raw_supplies
+    description: "One row per supply and product combination; a supply can be used by several products."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - supply_id
+              - sku
+    columns:
+      - name: supply_id
+        description: "Supply identifier; unique only when combined with sku."
+        data_tests:
+          - not_null
+      - name: sku
+        description: "Product that uses this supply."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__jaffle_shop__raw_products')
+                field: sku
